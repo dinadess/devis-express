@@ -1,0 +1,19 @@
+# Common ignores
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+.git
+.gitignore
+
+# Strapi build artifacts
+.build
+.cache
+.tmp
+public/uploads
+
+# Docker files (avoid copying from context)
+Dockerfile*
+docker-compose.yml

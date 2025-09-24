@@ -1,0 +1,29 @@
+# Dev Dockerfile for Strapi app using Yarn (Classic) and node_modules linker
+# - Includes build tools and vips for sharp
+# - Runs `yarn develop` on port 1337 with hot reload via bind mount
+
+FROM node:20-alpine
+
+# Working directory
+WORKDIR /srv/app
+
+# System deps for native modules (better-sqlite3, sharp, etc.)
+RUN apk add --no-cache python3 make g++ bash vips-dev
+
+# Copy manifests first for better caching
+COPY package.json yarn.lock* package-lock.json* ./
+
+# Use Yarn Classic to avoid PnP issues
+RUN corepack enable && corepack prepare yarn@1.22.22 --activate
+
+# Install deps with Yarn
+RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile; else yarn install; fi
+
+# Copy source (in dev we'll bind mount, but this allows starting even without mounts)
+COPY . .
+
+# Expose Strapi port
+EXPOSE 1337
+
+# Start Strapi in develop mode for hot reload
+CMD ["yarn", "develop"]
