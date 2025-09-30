@@ -1,12 +1,12 @@
 import { ProductsPerCategory } from "./ProductsPerCategory";
 
 export function SearchProductResults({
-  loading,
+  isPending,
   error,
   productData,
   searchText,
 }) {
-  if (loading) {
+  if (isPending) {
     return <p className="text-sm">Chargement des données...</p>;
   }
   if (error) {

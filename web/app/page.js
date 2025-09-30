@@ -3,14 +3,11 @@ import QuoteCard from "@/components/QuoteCard";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { promises as fs } from "fs";
 
 export default async function Home() {
-  const file = await fs.readFile(
-    process.cwd() + "/public/quote-data.json",
-    "utf8"
-  );
-  const quotes = JSON.parse(file);
+  const res = await fetch(`http://content:1337/api/quotes`);
+  const { data } = await res.json();
+  const quotes = data;
 
   return (
     <div className="container flex flex-col items-center gap-12 py-12">
@@ -27,7 +24,7 @@ export default async function Home() {
         <h2 className="font-semibold">
           Vous avez généré{" "}
           <span className="text-secondary-color-500">
-            {quotes.length} devis
+            {quotes?.length || "0"} devis
           </span>{" "}
           au total
         </h2>
@@ -48,14 +45,18 @@ export default async function Home() {
             />
           </div>
 
-          <div className="flex flex-col gap-3">
-            {quotes.map((quote) => (
-              <QuoteCard key={quote.id} {...quote} />
-            ))}
-          </div>
+          {quotes?.length > 0 ? (
+            <div className="flex flex-col gap-3">
+              {quotes?.map((quote) => (
+                <QuoteCard key={quote.id} {...quote} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-center">Aucun devis créé.</p>
+          )}
         </div>
 
-        {quotes.length > 0 && (
+        {quotes?.length > 0 && (
           <div className="flex justify-center">
             <Link
               href="/"

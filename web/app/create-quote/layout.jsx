@@ -2,11 +2,17 @@
 
 import React from "react";
 import { QuoteFormProvider } from "@/lib/QuoteFormContext";
+import TanstackQueryProvider from "@/lib/TanstackQueryProvider";
+import { Toaster } from "@/components/ui/sonner";
 
 const Layout = ({ children }) => {
   return (
     <>
-      <QuoteFormProvider>{children}</QuoteFormProvider>
+      <TanstackQueryProvider>
+        <QuoteFormProvider>{children}</QuoteFormProvider>
+      </TanstackQueryProvider>
+
+      <Toaster closeButton richColors />
     </>
   );
 };

@@ -1,0 +1,99 @@
+{
+  "kind": "collectionType",
+  "collectionName": "quotes",
+  "info": {
+    "singularName": "quote",
+    "pluralName": "quotes",
+    "displayName": "Quote"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "string",
+      "unique": true
+    },
+    "clientType": {
+      "type": "enumeration",
+      "enum": ["particulier", "entreprise"]
+    },
+    "clientLastName": {
+      "type": "string",
+      "required": true
+    },
+    "clientFirstName": {
+      "type": "string",
+      "required": true
+    },
+    "clientPhoneNumber": {
+      "type": "string",
+      "required": true
+    },
+    "clientEmailAddress": {
+      "type": "email",
+      "required": true
+    },
+    "clientPhysicalAddress": {
+      "type": "string",
+      "required": true
+    },
+    "eventName": {
+      "type": "string",
+      "required": true
+    },
+    "companyName": {
+      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "clientType"
+            },
+            "entreprise"
+          ]
+        }
+      },
+      "required": true
+    },
+    "tvaNumber": {
+      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "clientType"
+            },
+            "entreprise"
+          ]
+        }
+      },
+      "required": true
+    },
+    "siretNumber": {
+      "type": "string",
+      "conditions": {
+        "visible": {
+          "==": [
+            {
+              "var": "clientType"
+            },
+            "entreprise"
+          ]
+        }
+      },
+      "required": true
+    },
+    "totalPrice": {
+      "type": "decimal",
+      "required": true
+    },
+    "products": {
+      "type": "component",
+      "component": "shared.products",
+      "repeatable": true,
+      "required": true
+    }
+  }
+}

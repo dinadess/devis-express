@@ -20,7 +20,7 @@ import { useQuoteFormContext } from "@/lib/QuoteFormContext";
 
 const formSchema = ClientFormSchema.omit({
   id: true,
-  created_at: true,
+  createdAt: true,
   updated_at: true,
 });
 

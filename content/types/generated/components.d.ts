@@ -11,6 +11,25 @@ export interface SharedMedia extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedProducts extends Struct.ComponentSchema {
+  collectionName: 'components_shared_products';
+  info: {
+    displayName: 'products';
+    icon: 'stack';
+  };
+  attributes: {
+    category: Schema.Attribute.String & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    productId: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
+    totalPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    unitPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    vatRate: Schema.Attribute.Decimal & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedQuote extends Struct.ComponentSchema {
   collectionName: 'components_shared_quotes';
   info: {
@@ -66,6 +85,7 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'shared.media': SharedMedia;
+      'shared.products': SharedProducts;
       'shared.quote': SharedQuote;
       'shared.rich-text': SharedRichText;
       'shared.seo': SharedSeo;

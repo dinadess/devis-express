@@ -61,11 +61,13 @@ export function QuoteFormProvider({ children }) {
     setQuote((prevQuote) => {
       const seletedProducts = prevQuote.products;
 
-      const product = seletedProducts.find((p) => p.id === productToAdd.id);
+      const product = seletedProducts.find(
+        (p) => p.productId === productToAdd.productId
+      );
 
       if (product) {
         const updatedSeletedProducts = seletedProducts.map((item) =>
-          item.id === product.id
+          item.productId === product.productId
             ? {
                 ...item,
                 quantity: validQuantity ? validQuantity : item.quantity + 1,
@@ -114,7 +116,7 @@ export function QuoteFormProvider({ children }) {
       const seletedProducts = prevQuote.products;
 
       const updatedProducts = seletedProducts.filter(
-        (p) => p.id !== product.id
+        (p) => p.productId !== product.productId
       );
       const quoteTotalPrice = getQuoteTotalPrice(updatedProducts);
 

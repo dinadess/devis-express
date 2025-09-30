@@ -1,4 +1,3 @@
-
 services:
   web:
     build:
@@ -41,11 +40,14 @@ services:
     volumes:
       # Mount local source for hot-reload
       - ./content:/srv/app
+      # Use a container-only volume for node_modules to avoid host conflicts
+      - content_node_modules:/srv/app/node_modules
       # Keep sqlite data and uploads persisted between rebuilds
       - strapi_data:/srv/app/.tmp
       - strapi_uploads:/srv/app/public/uploads
 
 volumes:
   web_node_modules:
+  content_node_modules:
   strapi_data:
   strapi_uploads:

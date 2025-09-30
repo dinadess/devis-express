@@ -28,6 +28,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useState } from "react";
+import productCategories from "@/lib/data/category-data";
 
 const tauxTVAValides = ["0", "2.1", "5.5", "10", "20"];
 
@@ -37,13 +41,12 @@ const productSchema = z.object({
   unitPrice: z.coerce
     .number()
     .min(1, "Le prix unitaire doit être au minimum de 1€"),
-  vatRate: z.enum(tauxTVAValides),
-  // vatRate: z.preprocess(
-  //   (val) => (typeof val === "string" ? parseFloat(val) : val),
-  //   z.number().refine((val) => tauxTVAValides.includes(val), {
-  //     message: "Taux de TVA invalide.",
-  //   })
-  // ),
+  vatRate: z.preprocess(
+    (val) => (typeof val === "string" ? parseFloat(val) : val),
+    z.number().refine((val) => tauxTVAValides.includes(String(val)), {
+      message: "Taux de TVA invalide.",
+    })
+  ),
 });
 
 const defaultValues = {
@@ -54,21 +57,42 @@ const defaultValues = {
 };
 
 export function AddProductDialog() {
+  const [open, setOpen] = useState(false);
   const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues,
   });
 
-  function onSubmit(values) {
-    console.log("Values :", values);
+  const mutation = useMutation({
+    mutationFn: (formData) => {
+      return fetch(`http://localhost:1337/api/products`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: formData }),
+      });
+    },
+    onSuccess: () => {
+      toast.success("Produit ajouté avec succès.");
+      form.reset();
+      setOpen(false);
+    },
+    onError: () => {
+      toast.error("Une erreur est survenue lors de l'ajout du produit.");
+    },
+  });
+
+  function onSubmit(data) {
+    mutation.mutate(data);
   }
 
   const onError = (errors) => {
-    console.log("ÔØî Validation errors", errors);
+    console.log("Validation errors", errors);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -111,6 +135,7 @@ export function AddProductDialog() {
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
               name="category"
@@ -118,11 +143,22 @@ export function AddProductDialog() {
                 <FormItem>
                   <FormLabel>Catégorie</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Catégorie"
-                      className="placeholder:text-primary-color-900 h-12"
-                      {...field}
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="!h-12 w-full">
+                        <SelectValue placeholder="Catégorie" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {productCategories.map((category) => (
+                          <SelectItem value={category.label} key={category.id}>
+                            {category.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -186,8 +222,11 @@ export function AddProductDialog() {
               <Button
                 type="submit"
                 className="text-white bg-primary-color-500 hover:text-primary-color-900 hover:bg-secondary-color-500 py-3 h-auto cursor-pointer"
+                disabled={mutation.isPending}
               >
-                Créer le produit
+                {mutation.isPending
+                  ? "Création en cours..."
+                  : "Créer le produit"}
               </Button>
             </div>
           </form>

@@ -1,88 +1,53 @@
-# Boilerplate: Next.js + Strapi (Monorepo)
+# Devis Express: Next.js + Strapi (Monorepo)
 
-A modern starter that pairs a Next.js 15 frontend with a Strapi 5 backend in a single repository. It is optimized for local development with Docker or Yarn, and comes with a clear separation between the web app (`web/`) and the CMS API (`content/`).
+Application web de génération de devis conçue avec Next.js et Strapi.
 
-## Repository Structure
+## Stack Technique
 
-```
-boilerplate-nextjs-strapi/
-├─ content/   # Strapi v5 app (API & Admin)
-│  ├─ config/           # Strapi configs (db, server, plugins, etc.)
-│  ├─ src/              # Strapi code (content-types, controllers, routes, etc.)
-│  ├─ public/uploads/   # Media uploads (persisted via Docker volume)
-│  ├─ Dockerfile.dev    # Dev Dockerfile (Yarn Classic, node_modules linker)
-│  ├─ package.json
-│  └─ README.md
-├─ web/       # Next.js 15 app (React 19)
-│  ├─ src/
-│  ├─ next.config.ts
-│  ├─ Dockerfile.dev
-│  ├─ package.json
-│  └─ README.md
-├─ docker-compose.yml   # Compose for local development (web + content)
-├─ DOCKER.md            # Detailed Docker instructions
-└─ README.md            # You are here
-```
-
-## Tech Stack
-
-- Frontend: Next.js 15, React 19, TypeScript, Tailwind CSS 4
-- CMS/API: Strapi 5 (SQLite by default), `better-sqlite3`, `sharp`
+- Frontend: Next.js 15, React 19, Tailwind CSS 4, ShadCN UI & React Hook Form, Tanstack Query, html2pdf
+- CMS/API: Strapi 5 (SQLite by default)
 - Runtime: Node 20+ (containers use Alpine images)
 - Package manager: Yarn (Corepack)
 - Dev Containers: Docker Compose (two services: `web`, `content`)
 
 ## Requirements
 
-- Node 20+ (for local non-Docker work)
 - Yarn via Corepack (`corepack enable`)
-- Docker Desktop (if using containers)
+- Docker
 
-## Quick Start (with Docker)
-
-For most users, Docker is the fastest path to a working setup.
+## Quick Start
 
 ```bash
-# From repository root
+# Depuis la racine du projet
 docker compose up --build
 ```
 
 - Web (Next.js): http://localhost:3000
 - CMS (Strapi): http://localhost:1337
-- Strapi Admin: http://localhost:1337/admin (create the first admin user on first visit)
+- Strapi Admin: http://localhost:1337/admin (créer le premier admin lors de la première visite)
 
-Details and common commands are in `DOCKER.md`.
+## Instructions de démarrage
 
-## Quick Start (without Docker)
+- Créer le compte admin et s'assurer que le backend a bien démarré
+- Aller dans "Settings" > "Users & Permissions plugin" > "Roles" et activer les permissions de lecture (find & findOne) et d'écriture (create) sur "Quote" et "Product" pour l'utilisateur non authentifié (Public)
+- Ensuite, accéder au site pour voir la liste des devis et commencer la génération de nouveaux devis
 
-Two terminals required (one for `web/`, one for `content/`).
+## Tester l'application
 
-1) Strapi (content/)
-```bash
-cd content
-corepack enable
-# If you have a yarn.lock, prefer frozen
-yarn install --frozen-lockfile || yarn install
-# Development server
-yarn develop
-# Strapi defaults to http://localhost:1337
-```
+- Sur la page d'accueil, cliquer sur "Créer un nouveau devis" pour créer un devis
+- Une fois sur la page de création du devis -- étape 1 (Informations du client), remplir les différents champs avec les informations demandées.
+- À l'étape 2 (Sélection des produits), s'il s'agit de la première visite, ajouter un nouveau produit en cliquant sur le bouton correspondant. Ensuite, le rechercher via la barre de recherche et le sélectionner pour l'ajouter au devis.
+- Enfin, à l'étape 3 (Prévisualisation), vérifier si toutes les informations fournies sont fidèlement réflétées sur la page et télécharger le devis dès que c'est bon.
+- Le téléchargement s'effectue alors et le document s'ouvre dans un nouvel onglet dès qu'il est prêt
 
-2) Next.js (web/)
-```bash
-cd web
-corepack enable
-yarn install --frozen-lockfile || yarn install
-# Development server
-yarn dev
-# Next.js defaults to http://localhost:3000
-```
+- Lors du clic sur le bouton de téléchargement, une requête est lancée pour enregistrer le devis dans la base de données, afin d'y accéder sur la page d'accueil. Il se pourrait que cette étape soit défaillante en fonction de l'état de l'API.
 
-Ensure the frontend knows where the API is by setting `NEXT_PUBLIC_API_URL` to the Strapi URL (defaults to `http://localhost:1337`). When using Docker Compose, this is already provided.
+- Félicitations, vous venez de créer votre tout premier devis 🎉
 
-## Environment Variables
+## Variables d'Environnement
 
 - `web/`
+
   - `NEXT_PUBLIC_API_URL` (public): URL of the Strapi API.
 
 - `content/` (Strapi)
@@ -91,68 +56,20 @@ Ensure the frontend knows where the API is by setting `NEXT_PUBLIC_API_URL` to t
   - `DATABASE_CLIENT`: defaults to `sqlite` (see `content/config/database.ts`)
   - `HOST`, `PORT`: defaults to `0.0.0.0:1337` (see `content/config/server.ts`)
 
-When running via Docker Compose, these are preconfigured in `docker-compose.yml` for local development.
+## Captures d'écran
 
-## Database
+### Page d'accueil
 
-The default configuration uses SQLite (see `content/config/database.ts`). Data and uploads are persisted in Docker volumes when using Compose:
+![Homepage](./screenshots/homepage.png)
 
-- `strapi_data` -> `content/.tmp`
-- `strapi_uploads` -> `content/public/uploads`
+### Créer un devis -- Step 1
 
-To switch to PostgreSQL/MySQL later, update `content/config/database.ts` and extend `docker-compose.yml` with a `db` service and matching env vars.
+![Homepage](./screenshots/step-1.png)
 
-## Scripts
+### Créer un devis -- Step 2
 
-- `web/`
-  - `yarn dev`: Start Next.js dev server
-  - `yarn build`: Build for production
-  - `yarn start`: Start production server
+![Homepage](./screenshots/step-2.png)
 
-- `content/`
-  - `yarn develop`: Start Strapi in development
-  - `yarn build`: Build Strapi (for production)
-  - `yarn start`: Start Strapi in production
+### Créer un devis -- Step 3
 
-## Development Notes
-
-- This template favors reusability and consistency (senior-dev patterns):
-  - Clear separation of concerns: `web/` vs `content/`
-  - Containerized dev for parity and easy onboarding
-  - Yarn Classic for Strapi dev to avoid PnP pitfalls with native modules
-  - Alpine images with the minimum system dependencies for native builds
-- Prefer `.env` files for secrets in real projects. Do not commit secrets.
-
-## Troubleshooting
-
-- Docker build error: `no space left on device`
-  - Free up disk space in Docker Desktop (Prune unused images/volumes) or increase the Docker disk image size.
-  - Command line helpers:
-    ```bash
-    docker system df
-    docker system prune -a
-    docker volume prune
-    ```
-
-- Yarn/lockfile mismatch errors
-  - Ensure you run installs consistently with Yarn
-  - If switching from npm, remove `package-lock.json` and regenerate `yarn.lock`
-
-- Sharp / better-sqlite3 build issues on Alpine
-  - Ensure the required build tools and `vips-dev` are installed (already included in Dockerfiles)
-
-## Production
-
-This repo is optimized for local development. For production:
-- Build the frontend (`yarn build`) and serve via a production server or static export if suitable.
-- Build and run Strapi in production mode (`yarn build && yarn start`).
-- Use a managed database (PostgreSQL/MySQL) and object storage for uploads (S3, etc.).
-- Front a reverse proxy (e.g., Nginx, Traefik) with HTTPS.
-
-## License
-
-Add your project license here.
-
-## Contributing
-
-PRs and suggestions are welcome. Please keep the codebase consistent and well-documented.
+![Homepage](./screenshots/step-3.png)

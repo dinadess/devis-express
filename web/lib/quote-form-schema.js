@@ -46,7 +46,7 @@ export const ClientFormSchema = z
       .or(z.literal(""))
       .optional(),
     eventName: z.string().trim().min(3, "Champ requis : Minimum 3 caractères"),
-    created_at: z.iso.datetime(),
+    createdAt: z.iso.datetime(),
     updated_at: z.iso.datetime(),
   })
   .superRefine((data, ctx) => {

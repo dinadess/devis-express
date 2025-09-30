@@ -1,17 +1,44 @@
 import React from "react";
-import AppButton from "./AppButton";
 import Logo from "@/public/images/lheritage-logo.png";
 import { useQuoteFormContext } from "@/lib/QuoteFormContext";
 import Image from "next/image";
 import PreviewProductsTable from "./PreviewProductsTable";
 import DownloadQuote from "./DownloadQuote";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const QuoteFormStepThree = () => {
+  const router = useRouter();
+
   const { quote } = useQuoteFormContext();
 
   const formattedDate = new Intl.DateTimeFormat("fr-FR", {
     dateStyle: "full",
-  }).format(quote.created_at);
+  }).format(new Date());
+
+  const mutation = useMutation({
+    mutationFn: (quoteData) => {
+      return fetch(`http://localhost:1337/api/quotes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: quoteData }),
+      });
+    },
+    onSuccess: () => {
+      toast.success("Devis ajouté avec succès.");
+      router.push("/");
+    },
+    onError: () => {
+      toast.error("Une erreur est survenue lors de l'ajout du devis.");
+    },
+  });
+
+  function handleClick() {
+    mutation.mutate(quote);
+  }
 
   return (
     <div>
@@ -20,7 +47,7 @@ const QuoteFormStepThree = () => {
           Prévisualisation du devis
         </h2>
 
-        <DownloadQuote eventName={quote?.eventName} />
+        <DownloadQuote eventName={quote?.eventName} onSaveQuote={handleClick} />
       </section>
 
       <section

@@ -1,63 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { SearchProductResults } from "./SearchProductResults";
 import SelectedProductItem from "./SelectedProductItem";
 import { useQuoteFormContext } from "@/lib/QuoteFormContext";
 import { AddProductDialog } from "./AddProductDialog";
+import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "@/app/hooks/useDebounce";
+
+const API_URL = "http://localhost:1337/api";
+
+const fetchProducts = async function (searchText) {
+  if (!searchText) {
+    setProductData([]);
+    return;
+  }
+
+  const response = await fetch(
+    `${API_URL}/products?filters[name][$containsi]=${searchText}`
+  );
+
+  return response.json();
+};
 
 const QuoteFormStepTwo = () => {
   const quoteFormContext = useQuoteFormContext();
 
   const selectedProducts = quoteFormContext.quote.products;
 
-  const [productData, setProductData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
   const [searchText, setSearchText] = useState("");
+  const debouncedSearchText = useDebounce(searchText, 500);
 
-  useEffect(() => {
-    if (!searchText) {
-      setProductData([]);
-      return;
-    }
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-
-        const response = await fetch("/product-data.json");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const jsonData = await response.json();
-        const filteredData = jsonData.filter((product) =>
-          product.name.toLowerCase().includes(searchText)
-        );
-
-        const productsByCategory = Object.groupBy(
-          filteredData,
-          (product) => product.category
-        );
-        setProductData(productsByCategory);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-
-    const timeoutId = setTimeout(() => {
-      fetchData();
-    }, 500);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [searchText]);
+  const { isPending, data, error } = useQuery({
+    queryKey: ["products", debouncedSearchText],
+    queryFn: () => fetchProducts(debouncedSearchText),
+    select: (res) => {
+      const productsByCategory = Object.groupBy(
+        res?.data,
+        (product) => product.category
+      );
+      return productsByCategory;
+    },
+  });
 
   return (
     <div className="grid md:grid-cols-[1fr_2px_1fr] gap-8">
@@ -84,9 +68,9 @@ const QuoteFormStepTwo = () => {
 
         {searchText.length > 0 && (
           <SearchProductResults
-            loading={loading}
-            error={error}
-            productData={productData}
+            isPending={isPending}
+            error={error?.message}
+            productData={data}
             searchText={searchText}
           />
         )}
@@ -100,7 +84,7 @@ const QuoteFormStepTwo = () => {
         </h2>
 
         {selectedProducts?.map((product) => (
-          <SelectedProductItem key={product.id} product={product} />
+          <SelectedProductItem key={product.productId} product={product} />
         ))}
 
         {selectedProducts?.length > 0 && (

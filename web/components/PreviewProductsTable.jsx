@@ -34,7 +34,7 @@ const PreviewProductsTable = () => {
         <TableBody>
           {products.map((product) => (
             <TableRow
-              key={product.id}
+              key={product.productId}
               className="font-medium hover:bg-transparent border-b-0"
             >
               <TableCell>{product.name}</TableCell>

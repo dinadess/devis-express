@@ -6,6 +6,18 @@ import { useQuoteFormContext } from "@/lib/QuoteFormContext";
 const SearchProductItem = ({ product }) => {
   const quoteFormContext = useQuoteFormContext();
 
+  const handleClick = function (product) {
+    const newProduct = {
+      productId: product.id,
+      name: product.name,
+      category: product.category,
+      unitPrice: product.unitPrice,
+      vatRate: product.vatRate,
+    };
+
+    quoteFormContext.updateQuoteProducts(newProduct);
+  };
+
   return (
     <li className="border border-b-black-50 p-3 rounded-primary-button">
       <h3 className="font-medium mb-3">{product.name}</h3>
@@ -17,7 +29,7 @@ const SearchProductItem = ({ product }) => {
           variant="secondary"
           size="icon"
           className="size-8 bg-primary-color-50 cursor-pointer"
-          onClick={() => quoteFormContext.updateQuoteProducts(product)}
+          onClick={() => handleClick(product)}
         >
           <Plus />
         </Button>

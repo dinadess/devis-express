@@ -538,6 +538,75 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiProductProduct extends Struct.CollectionTypeSchema {
+  collectionName: 'products';
+  info: {
+    displayName: 'Product';
+    pluralName: 'products';
+    singularName: 'product';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    category: Schema.Attribute.String & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product.product'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    unitPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    vatRate: Schema.Attribute.Decimal & Schema.Attribute.Required;
+  };
+}
+
+export interface ApiQuoteQuote extends Struct.CollectionTypeSchema {
+  collectionName: 'quotes';
+  info: {
+    displayName: 'Quote';
+    pluralName: 'quotes';
+    singularName: 'quote';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    clientEmailAddress: Schema.Attribute.Email & Schema.Attribute.Required;
+    clientFirstName: Schema.Attribute.String & Schema.Attribute.Required;
+    clientLastName: Schema.Attribute.String & Schema.Attribute.Required;
+    clientPhoneNumber: Schema.Attribute.String & Schema.Attribute.Required;
+    clientPhysicalAddress: Schema.Attribute.String & Schema.Attribute.Required;
+    clientType: Schema.Attribute.Enumeration<['particulier', 'entreprise']>;
+    companyName: Schema.Attribute.String & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    eventName: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::quote.quote'> &
+      Schema.Attribute.Private;
+    products: Schema.Attribute.Component<'shared.products', true> &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    siretNumber: Schema.Attribute.String & Schema.Attribute.Required;
+    slug: Schema.Attribute.String & Schema.Attribute.Unique;
+    totalPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    tvaNumber: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1052,6 +1121,8 @@ declare module '@strapi/strapi' {
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
       'api::global.global': ApiGlobalGlobal;
+      'api::product.product': ApiProductProduct;
+      'api::quote.quote': ApiQuoteQuote;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
