@@ -1,0 +1,162 @@
+import { createContext, useContext, useState } from "react";
+
+const initialValues = {
+  clientType: "particulier",
+  clientLastName: "",
+  clientFirstName: "",
+  clientPhoneNumber: "",
+  clientEmailAddress: "",
+  clientPhysicalAddress: "",
+  eventName: "",
+  companyName: "",
+  tvaNumber: "",
+  siretNumber: "",
+  totalPrice: "",
+  products: [],
+};
+
+const QuoteFormContext = createContext({});
+
+export function QuoteFormProvider({ children }) {
+  const [currentStep, setCurrentStep] = useState(1);
+
+  const [quote, setQuote] = useState(initialValues);
+
+  const handleNextStep = function () {
+    if (currentStep < 3) {
+      setCurrentStep((s) => s + 1);
+    }
+  };
+
+  const handlePreviousStep = function () {
+    if (currentStep > 1) {
+      setCurrentStep((s) => s - 1);
+    }
+  };
+
+  const updateQuoteData = function (values) {
+    setQuote({ ...quote, ...values });
+  };
+
+  const getProductTotalPrice = function (unitPrice, vatRate, quantity) {
+    return parseFloat(
+      (unitPrice * quantity + unitPrice * quantity * (vatRate / 100)).toFixed(2)
+    );
+  };
+
+  const getQuoteTotalPrice = function (quoteProducts) {
+    const quoteTotalPrice = quoteProducts.reduce(
+      (acc, curVal) => acc + curVal.totalPrice,
+      0
+    );
+
+    return quoteTotalPrice;
+  };
+
+  const updateQuoteProducts = function (productToAdd, newQuantity) {
+    const validQuantity = parseInt(newQuantity)
+      ? Math.max(1, parseInt(newQuantity))
+      : null;
+
+    setQuote((prevQuote) => {
+      const seletedProducts = prevQuote.products;
+
+      const product = seletedProducts.find((p) => p.id === productToAdd.id);
+
+      if (product) {
+        const updatedSeletedProducts = seletedProducts.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                quantity: validQuantity ? validQuantity : item.quantity + 1,
+                totalPrice: getProductTotalPrice(
+                  item.unitPrice,
+                  item.vatRate,
+                  validQuantity ? validQuantity : item.quantity + 1
+                ),
+              }
+            : item
+        );
+        return { ...prevQuote, products: updatedSeletedProducts };
+      } else {
+        return {
+          ...prevQuote,
+          products: [
+            ...seletedProducts,
+            {
+              ...productToAdd,
+              quantity: 1,
+              totalPrice: getProductTotalPrice(
+                productToAdd.unitPrice,
+                productToAdd.vatRate,
+                1
+              ),
+            },
+          ],
+        };
+      }
+    });
+    setQuote((prevQuote) => {
+      const seletedProducts = prevQuote.products;
+
+      const quoteTotalPrice = getQuoteTotalPrice(seletedProducts);
+
+      return {
+        ...prevQuote,
+        totalPrice: quoteTotalPrice,
+        products: seletedProducts,
+      };
+    });
+  };
+
+  const deleteQuoteProduct = function (product) {
+    setQuote((prevQuote) => {
+      const seletedProducts = prevQuote.products;
+
+      const updatedProducts = seletedProducts.filter(
+        (p) => p.id !== product.id
+      );
+      const quoteTotalPrice = getQuoteTotalPrice(updatedProducts);
+
+      return {
+        ...prevQuote,
+        totalPrice: quoteTotalPrice,
+        products: updatedProducts,
+      };
+    });
+  };
+
+  const resetQuoteForm = function () {
+    setQuote(initialValues);
+    setCurrentStep(1);
+  };
+
+  return (
+    <QuoteFormContext
+      value={{
+        currentStep,
+        handleNextStep,
+        handlePreviousStep,
+        quote,
+        updateQuoteData,
+        updateQuoteProducts,
+        deleteQuoteProduct,
+        resetQuoteForm,
+      }}
+    >
+      {children}
+    </QuoteFormContext>
+  );
+}
+
+export const useQuoteFormContext = function () {
+  const context = useContext(QuoteFormContext);
+
+  if (!context) {
+    throw new Error(
+      "useQuoteFormContext must be called inside a QuoteFormContext"
+    );
+  }
+
+  return context;
+};

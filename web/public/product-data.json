@@ -1,0 +1,83 @@
+[
+  {
+    "id": "PROD-001",
+    "name": "Charles Heidsieck Brut Réserve",
+    "category": "Champagne",
+    "unitPrice": 85.5,
+    "vatRate": 20,
+    "created_at": "2025-09-01T10:00:00Z",
+    "updated_at": "2025-09-10T12:00:00Z"
+  },
+  {
+    "id": "PROD-002",
+    "name": "Moêt & Chandon Impérial",
+    "category": "Champagne",
+    "unitPrice": 45.0,
+    "vatRate": 20,
+    "created_at": "2025-09-05T09:00:00Z",
+    "updated_at": "2025-09-12T11:00:00Z"
+  },
+  {
+    "id": "PROD-003",
+    "name": "Veuve Clicquot Brut Carte Jaune",
+    "category": "Champagne",
+    "unitPrice": 60.0,
+    "vatRate": 20,
+    "created_at": "2025-09-07T15:30:00Z",
+    "updated_at": "2025-09-14T16:30:00Z"
+  },
+  {
+    "id": "PROD-004",
+    "name": "Hennessy XO",
+    "category": "Cognac et Armagnac",
+    "unitPrice": 190.0,
+    "vatRate": 20,
+    "created_at": "2025-09-03T13:00:00Z",
+    "updated_at": "2025-09-11T10:15:00Z"
+  },
+  {
+    "id": "PROD-005",
+    "name": "Delamain Pale & Dry XO",
+    "category": "Cognac et Armagnac",
+    "unitPrice": 110.0,
+    "vatRate": 20,
+    "created_at": "2025-09-06T11:45:00Z",
+    "updated_at": "2025-09-13T17:10:00Z"
+  },
+  {
+    "id": "PROD-006",
+    "name": "Château de Laubade XO",
+    "category": "Cognac et Armagnac",
+    "unitPrice": 95.0,
+    "vatRate": 20,
+    "created_at": "2025-09-08T10:20:00Z",
+    "updated_at": "2025-09-15T14:00:00Z"
+  },
+  {
+    "id": "PROD-007",
+    "name": "Signature Mule (Gingembre & Cognac)",
+    "category": "Cocktails signatures",
+    "unitPrice": 14.0,
+    "vatRate": 10,
+    "created_at": "2025-09-10T18:30:00Z",
+    "updated_at": "2025-09-18T19:00:00Z"
+  },
+  {
+    "id": "PROD-008",
+    "name": "French Negroni",
+    "category": "Cocktails signatures",
+    "unitPrice": 13.5,
+    "vatRate": 10,
+    "created_at": "2025-09-11T19:15:00Z",
+    "updated_at": "2025-09-20T20:10:00Z"
+  },
+  {
+    "id": "PROD-009",
+    "name": "Armagnac Old Fashioned",
+    "category": "Cocktails signatures",
+    "unitPrice": 15.0,
+    "vatRate": 10,
+    "created_at": "2025-09-12T20:00:00Z",
+    "updated_at": "2025-09-21T21:00:00Z"
+  }
+]

@@ -1,0 +1,86 @@
+import React from "react";
+import AppButton from "./AppButton";
+import Logo from "@/public/images/lheritage-logo.png";
+import { useQuoteFormContext } from "@/lib/QuoteFormContext";
+import Image from "next/image";
+import PreviewProductsTable from "./PreviewProductsTable";
+import DownloadQuote from "./DownloadQuote";
+
+const QuoteFormStepThree = () => {
+  const { quote } = useQuoteFormContext();
+
+  const formattedDate = new Intl.DateTimeFormat("fr-FR", {
+    dateStyle: "full",
+  }).format(quote.created_at);
+
+  return (
+    <div>
+      <section className="flex justify-between items-center flex-wrap gap-4 mb-8">
+        <h2 className="font-playfair font-bold text-xl">
+          Prévisualisation du devis
+        </h2>
+
+        <DownloadQuote eventName={quote?.eventName} />
+      </section>
+
+      <section
+        id="devisPreview"
+        className="max-w-2xl border border-black-100 p-8 flex flex-col gap-10 mx-auto"
+      >
+        <div className="flex justify-between items-center flex-wrap gap-4">
+          <Image src={Logo} alt="L'Héritage 105" />
+
+          <div className="flex flex-col gap-1.5">
+            <h2 className="font-extrabold font-playfair text-2xl">
+              Devis {quote?.eventName}
+            </h2>
+            <p className="text-xs">{quote?.id}</p>
+            <p className="text-xs capitalize">{formattedDate}</p>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <section className="flex flex-col gap-1.5">
+            <h3 className="font-playfair font-bold text-xl">L'Héritage 105</h3>
+            <p className="text-xs">
+              105 Rue du Faubourg Saint-Honoré <br /> 75008 PARIS 08, France
+            </p>
+            <p className="text-xs">Tel : +33 9 66 82 41 08</p>
+            <p className="text-xs">direction@lheritage105.com</p>
+            <p className="text-xs">
+              N° TVA Intracommunautaire : <br /> FR74984132274
+            </p>
+            <p className="text-xs">N° SIRET : 98413227400023</p>
+            <p className="text-xs">Code NAF : 5610A</p>
+            <p className="text-xs">RCS : Paris</p>
+            <p className="text-xs">Capital : 1 000 €</p>
+          </section>
+
+          <section className="flex flex-col gap-1.5">
+            <h3 className="font-playfair font-bold text-xl">
+              {quote.clientLastName + " " + quote.clientFirstName}
+            </h3>
+            <p className="text-xs">{quote.clientPhoneNumber}</p>
+            <p className="text-xs">{quote.clientEmailAddress}</p>
+            <p className="text-xs">{quote.clientPhysicalAddress}</p>
+            <p className="text-xs">{quote?.companyName}</p>
+            <p className="text-xs">{quote?.tvaNumber}</p>
+            <p className="text-xs">{quote?.siretNumber}</p>
+          </section>
+        </div>
+
+        <PreviewProductsTable />
+
+        <hr className="bg-black-50" />
+
+        <div className="mb-8">
+          <p className="text-primary-color-500 text-xs text-center">
+            Merci de choisir L'Héritage 105 pour votre événement
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default QuoteFormStepThree;

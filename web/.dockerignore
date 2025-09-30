@@ -1,0 +1,20 @@
+# Common ignores
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+.git
+.gitignore
+
+# Next
+.env*
+.next/
+
+# Docker files (avoid copying from context)
+Dockerfile*
+docker-compose.yml
+.dockerignore
+README.md
+LICENSE

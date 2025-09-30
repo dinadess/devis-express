@@ -1,0 +1,23 @@
+# Use official Node.js image
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies
+COPY package.json yarn.lock* package-lock.json* ./
+
+# Use Yarn Classic to avoid PnP issues
+RUN corepack enable && corepack prepare yarn@1.22.22 --activate
+
+# Install deps with Yarn
+RUN if [ -f yarn.lock ]; then yarn install --frozen-lockfile; else yarn install; fi
+
+# Copy the rest of the code
+COPY . .
+
+# Expose development port
+EXPOSE 3000
+
+# Start the development server
+CMD ["yarn", "dev"]
