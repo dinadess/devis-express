@@ -12,7 +12,7 @@ const QuoteCard = ({
 }) => {
   const formattedDate = new Intl.DateTimeFormat("fr-FR", {
     dateStyle: "short",
-  }).format(new Date(new Date(createdAt)));
+  }).format(new Date(createdAt));
   const formattedPrice = new Intl.NumberFormat("fr-FR").format(totalPrice);
 
   return (

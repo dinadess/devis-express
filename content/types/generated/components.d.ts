@@ -20,9 +20,7 @@ export interface SharedProducts extends Struct.ComponentSchema {
   attributes: {
     category: Schema.Attribute.String & Schema.Attribute.Required;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    productId: Schema.Attribute.Integer &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    productId: Schema.Attribute.Integer & Schema.Attribute.Required;
     quantity: Schema.Attribute.Integer & Schema.Attribute.Required;
     totalPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;
     unitPrice: Schema.Attribute.Decimal & Schema.Attribute.Required;

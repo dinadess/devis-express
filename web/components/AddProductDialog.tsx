@@ -32,6 +32,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useState } from "react";
 import productCategories from "@/lib/data/category-data";
+import { Product } from "@/types/product";
 
 const tauxTVAValides = ["0", "2.1", "5.5", "10", "20"];
 
@@ -39,17 +40,19 @@ const productSchema = z.object({
   name: z.string().min(1, "Le nom est requis"),
   category: z.string().min(1, "La catégorie est requise"),
   unitPrice: z.coerce
-    .number()
+    .number("Ce champ doit être un nombre")
     .min(1, "Le prix unitaire doit être au minimum de 1€"),
   vatRate: z.preprocess(
     (val) => (typeof val === "string" ? parseFloat(val) : val),
-    z.number().refine((val) => tauxTVAValides.includes(String(val)), {
-      message: "Taux de TVA invalide.",
-    })
+    z
+      .number("Champ requis")
+      .refine((val) => tauxTVAValides.includes(String(val)), {
+        message: "Taux de TVA invalide.",
+      })
   ),
 });
 
-const defaultValues = {
+const defaultValues: Product = {
   name: "",
   category: "",
   unitPrice: "",
@@ -108,7 +111,7 @@ export function AddProductDialog() {
             Ajouter un nouveau produit
           </DialogTitle>
           <DialogDescription className="text-black-400">
-            Ajouter un produit n'existant pas dans le menu
+            Ajouter un produit n&#39;existant pas dans le menu
           </DialogDescription>
         </DialogHeader>
 
@@ -174,7 +177,13 @@ export function AddProductDialog() {
                     <Input
                       placeholder="Prix unitaire"
                       className="placeholder:text-primary-color-900 h-12"
-                      {...field}
+                      value={field.value?.toString() || ""}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        field.onChange(val === "" ? NaN : Number(val));
+                      }}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
                     />
                   </FormControl>
                   <FormMessage />
@@ -190,7 +199,7 @@ export function AddProductDialog() {
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value?.toString()}
                     >
                       <SelectTrigger className="!h-12 w-full">
                         <SelectValue placeholder="VAT (%)" />

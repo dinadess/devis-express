@@ -9,7 +9,10 @@ const FormNextButton = () => {
 
   function handleSubmit() {
     if (currentStep === 1) {
-      document.querySelector("form[name='step-1'")?.requestSubmit();
+      const form = document.querySelector(
+        "form[name='step-1'"
+      ) as HTMLFormElement;
+      form?.requestSubmit();
     }
     if (currentStep === 2) {
       if (quote.products.length > 0) {

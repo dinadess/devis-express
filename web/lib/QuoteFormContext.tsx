@@ -1,6 +1,19 @@
 import { createContext, useContext, useState } from "react";
+import { Quote } from "@/types/quote";
+import { Product } from "@/types/product";
 
-const initialValues = {
+interface QuoteFormContextType {
+  currentStep: number;
+  handleNextStep: () => void;
+  handlePreviousStep: () => void;
+  quote: Quote;
+  updateQuoteData: (quote: Partial<Quote>) => void;
+  updateQuoteProducts: (product: Product, quantity: string) => void;
+  deleteQuoteProduct: (product: Product) => void;
+  resetQuoteForm: () => void;
+}
+
+const initialValues: Quote = {
   clientType: "particulier",
   clientLastName: "",
   clientFirstName: "",
@@ -11,11 +24,11 @@ const initialValues = {
   companyName: "",
   tvaNumber: "",
   siretNumber: "",
-  totalPrice: "",
+  totalPrice: 0,
   products: [],
 };
 
-const QuoteFormContext = createContext({});
+const QuoteFormContext = createContext<QuoteFormContextType | null>(null);
 
 export function QuoteFormProvider({ children }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -34,17 +47,21 @@ export function QuoteFormProvider({ children }) {
     }
   };
 
-  const updateQuoteData = function (values) {
+  const updateQuoteData = function (values: Partial<Quote>) {
     setQuote({ ...quote, ...values });
   };
 
-  const getProductTotalPrice = function (unitPrice, vatRate, quantity) {
+  const getProductTotalPrice = function (
+    unitPrice: number,
+    vatRate: number,
+    quantity: number
+  ) {
     return parseFloat(
       (unitPrice * quantity + unitPrice * quantity * (vatRate / 100)).toFixed(2)
     );
   };
 
-  const getQuoteTotalPrice = function (quoteProducts) {
+  const getQuoteTotalPrice = function (quoteProducts: Product[]) {
     const quoteTotalPrice = quoteProducts.reduce(
       (acc, curVal) => acc + curVal.totalPrice,
       0
@@ -53,7 +70,10 @@ export function QuoteFormProvider({ children }) {
     return quoteTotalPrice;
   };
 
-  const updateQuoteProducts = function (productToAdd, newQuantity) {
+  const updateQuoteProducts = function (
+    productToAdd: Product,
+    newQuantity: string
+  ) {
     const validQuantity = parseInt(newQuantity)
       ? Math.max(1, parseInt(newQuantity))
       : null;
@@ -72,8 +92,8 @@ export function QuoteFormProvider({ children }) {
                 ...item,
                 quantity: validQuantity ? validQuantity : item.quantity + 1,
                 totalPrice: getProductTotalPrice(
-                  item.unitPrice,
-                  item.vatRate,
+                  Number(item.unitPrice),
+                  Number(item.vatRate),
                   validQuantity ? validQuantity : item.quantity + 1
                 ),
               }
@@ -89,8 +109,8 @@ export function QuoteFormProvider({ children }) {
               ...productToAdd,
               quantity: 1,
               totalPrice: getProductTotalPrice(
-                productToAdd.unitPrice,
-                productToAdd.vatRate,
+                Number(productToAdd.unitPrice),
+                Number(productToAdd.vatRate),
                 1
               ),
             },
@@ -111,7 +131,7 @@ export function QuoteFormProvider({ children }) {
     });
   };
 
-  const deleteQuoteProduct = function (product) {
+  const deleteQuoteProduct = function (product: Product) {
     setQuote((prevQuote) => {
       const seletedProducts = prevQuote.products;
 

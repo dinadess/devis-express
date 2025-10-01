@@ -5,7 +5,7 @@ import { QuoteFormProvider } from "@/lib/QuoteFormContext";
 import TanstackQueryProvider from "@/lib/TanstackQueryProvider";
 import { Toaster } from "@/components/ui/sonner";
 
-const Layout = ({ children }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <TanstackQueryProvider>

@@ -1,5 +1,14 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Button } from "./ui/button";
+
+type AppButtonProps = {
+  children: ReactNode;
+  link?: boolean;
+  variant?: string;
+  type?: "button" | "submit" | "reset";
+  onClick?: React.MouseEventHandler;
+  disabled?: boolean;
+};
 
 const baseStyle =
   "font-medium px-6 py-3 rounded-[0.625rem] transition-colors cursor-pointer w-fit h-auto flex items-center gap-2.5";
@@ -17,7 +26,7 @@ const AppButton = ({
   type,
   onClick,
   disabled,
-}) => {
+}: AppButtonProps) => {
   return (
     <Button
       type={type}

@@ -2,7 +2,7 @@ export default {
   async afterCreate(event) {
     const { result } = event;
 
-    if (result.id) {
+    if (result.id && !result.slug) {
       const year = new Date().getFullYear();
       const idPadded = String(result.id).padStart(3, "0");
 

@@ -7,13 +7,13 @@ import { useQuoteFormContext } from "@/lib/QuoteFormContext";
 import { AddProductDialog } from "./AddProductDialog";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "@/app/hooks/useDebounce";
+import { Product } from "@/types/product";
 
 const API_URL = "http://localhost:1337/api";
 
-const fetchProducts = async function (searchText) {
+const fetchProducts = async function (searchText: string) {
   if (!searchText) {
-    setProductData([]);
-    return;
+    return [];
   }
 
   const response = await fetch(
@@ -35,11 +35,14 @@ const QuoteFormStepTwo = () => {
     queryKey: ["products", debouncedSearchText],
     queryFn: () => fetchProducts(debouncedSearchText),
     select: (res) => {
-      const productsByCategory = Object.groupBy(
-        res?.data,
-        (product) => product.category
-      );
-      return productsByCategory;
+      if (res.data) {
+        const productsByCategory = Object.groupBy(
+          res?.data,
+          (product: Product) => product.category
+        );
+        return productsByCategory;
+      }
+      return {};
     },
   });
 

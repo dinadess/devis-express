@@ -9,7 +9,7 @@
     "productId": {
       "type": "integer",
       "required": true,
-      "unique": true
+      "unique": false
     },
     "name": {
       "type": "string",

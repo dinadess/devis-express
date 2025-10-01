@@ -197,23 +197,59 @@ const QuoteFormStepOne = () => {
           )}
         />
 
-        <div
-          className={`${
-            selectedClientType && selectedClientType === "entreprise"
-              ? "block"
-              : "hidden"
-          }`}
-        >
-          <div className="grid md:grid-cols-2 gap-6">
+        {selectedClientType && selectedClientType === "entreprise" && (
+          <>
+            <div className="grid md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="companyName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">
+                      Nom de l&#39;entreprise
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Nom de l'entreprise"
+                        className="placeholder:text-primary-color-900 h-14"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="tvaNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">
+                      N° TVA Intracommunautaire
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="N° TVA Intracommunautaire"
+                        className="placeholder:text-primary-color-900 h-14"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
-              name="companyName"
+              name="siretNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="sr-only">Nom de l'entreprise</FormLabel>
+                  <FormLabel className="sr-only">Numéro siret</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Nom de l'entreprise"
+                      placeholder="Numéro siret"
                       className="placeholder:text-primary-color-900 h-14"
                       {...field}
                     />
@@ -222,46 +258,8 @@ const QuoteFormStepOne = () => {
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="tvaNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="sr-only">
-                    N° TVA Intracommunautaire
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="N° TVA Intracommunautaire"
-                      className="placeholder:text-primary-color-900 h-14"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormField
-            control={form.control}
-            name="siretNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">Numéro siret</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Numéro siret"
-                    className="placeholder:text-primary-color-900 h-14"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+          </>
+        )}
 
         <div className="flex flex-col gap-4">
           <h2 className="font-playfair font-bold text-xl">Événement</h2>
@@ -271,7 +269,9 @@ const QuoteFormStepOne = () => {
             name="eventName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="sr-only">Nom de l'Événement</FormLabel>
+                <FormLabel className="sr-only">
+                  Nom de l&#39;Événement
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Nom de l'Événement"

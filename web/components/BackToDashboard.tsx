@@ -25,12 +25,12 @@ const BackToDashboard = () => {
   };
 
   return (
-    <AlertDialog className="!max-w-[28rem] px-4 py-6">
+    <AlertDialog>
       <AlertDialogTrigger className="font-medium flex items-center gap-2.5 w-fit cursor-pointer">
         <ArrowLeft />
         Retour au dashboard
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="!max-w-[28rem] px-4 py-6">
         <AlertDialogHeader>
           <AlertDialogTitle className="font-playfair font-bold text-xl">
             Êtes-vous sûr de vouloir partir ?

@@ -20,7 +20,11 @@ export const metadata = {
   description: "Générez vos devis",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body

@@ -4,7 +4,7 @@ Application web de génération de devis conçue avec Next.js et Strapi.
 
 ## Stack Technique
 
-- Frontend: Next.js 15, React 19, Tailwind CSS 4, ShadCN UI & React Hook Form, Tanstack Query, html2pdf
+- Frontend: Next.js 15, React 19, Tailwind CSS 4, Typescript, ShadCN UI & React Hook Form, Tanstack Query, html2pdf
 - CMS/API: Strapi 5 (SQLite by default)
 - Runtime: Node 20+ (containers use Alpine images)
 - Package manager: Yarn (Corepack)
@@ -38,9 +38,9 @@ docker compose up --build
 - Une fois sur la page de création du devis -- étape 1 (Informations du client), remplir les différents champs avec les informations demandées.
 - À l'étape 2 (Sélection des produits), s'il s'agit de la première visite, ajouter un nouveau produit en cliquant sur le bouton correspondant. Ensuite, le rechercher via la barre de recherche et le sélectionner pour l'ajouter au devis.
 - Enfin, à l'étape 3 (Prévisualisation), vérifier si toutes les informations fournies sont fidèlement réflétées sur la page et télécharger le devis dès que c'est bon.
-- Le téléchargement s'effectue alors et le document s'ouvre dans un nouvel onglet dès qu'il est prêt
+- Le téléchargement s'effectue alors et le document s'ouvre dans un nouvel onglet dès qu'il est prêt.
 
-- Lors du clic sur le bouton de téléchargement, une requête est lancée pour enregistrer le devis dans la base de données, afin d'y accéder sur la page d'accueil. Il se pourrait que cette étape soit défaillante en fonction de l'état de l'API.
+- Lors du clic sur le bouton de téléchargement, une requête est lancée pour enregistrer le devis dans la base de données. Dès que le devis est enregistré, vous êtes redirigé sur la page d'accueil et vous pouvez y voir votre nouveau devis.
 
 - Félicitations, vous venez de créer votre tout premier devis 🎉
 

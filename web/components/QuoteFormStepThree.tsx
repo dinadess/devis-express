@@ -7,9 +7,12 @@ import DownloadQuote from "./DownloadQuote";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Quote } from "@/types/quote";
 
 const QuoteFormStepThree = () => {
   const router = useRouter();
+
+  const quoteTempId = `DEV-${new Date().getFullYear()}-00X`;
 
   const { quote } = useQuoteFormContext();
 
@@ -17,16 +20,26 @@ const QuoteFormStepThree = () => {
     dateStyle: "full",
   }).format(new Date());
 
+  const createQuote = async function (quoteData: Quote) {
+    const res = await fetch(`http://localhost:1337/api/quotes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data: quoteData }),
+    });
+
+    const json = await res.json();
+
+    if (!json.data) {
+      throw new Error(json?.error?.message || "Une erreur est survenue.");
+    }
+
+    return json.data;
+  };
+
   const mutation = useMutation({
-    mutationFn: (quoteData) => {
-      return fetch(`http://localhost:1337/api/quotes`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ data: quoteData }),
-      });
-    },
+    mutationFn: createQuote,
     onSuccess: () => {
       toast.success("Devis ajouté avec succès.");
       router.push("/");
@@ -61,14 +74,16 @@ const QuoteFormStepThree = () => {
             <h2 className="font-extrabold font-playfair text-2xl">
               Devis {quote?.eventName}
             </h2>
-            <p className="text-xs">{quote?.id}</p>
+            <p className="text-xs">{quoteTempId}</p>
             <p className="text-xs capitalize">{formattedDate}</p>
           </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
           <section className="flex flex-col gap-1.5">
-            <h3 className="font-playfair font-bold text-xl">L'Héritage 105</h3>
+            <h3 className="font-playfair font-bold text-xl">
+              L&#39;Héritage 105
+            </h3>
             <p className="text-xs">
               105 Rue du Faubourg Saint-Honoré <br /> 75008 PARIS 08, France
             </p>
@@ -102,7 +117,7 @@ const QuoteFormStepThree = () => {
 
         <div className="mb-8">
           <p className="text-primary-color-500 text-xs text-center">
-            Merci de choisir L'Héritage 105 pour votre événement
+            Merci de choisir L&#39;Héritage 105 pour votre événement
           </p>
         </div>
       </section>

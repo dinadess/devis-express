@@ -60,11 +60,13 @@ export const ClientFormSchema = z
       }
       if (!data.tvaNumber) {
         return ctx.addIssue({
+          code: "custom",
           message: "Ce champ est requis.",
         });
       }
       if (!data.siretNumber) {
         return ctx.addIssue({
+          code: "custom",
           message: "Ce champ est requis.",
         });
       }

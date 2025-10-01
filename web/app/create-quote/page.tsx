@@ -11,7 +11,7 @@ import { useQuoteFormContext } from "@/lib/QuoteFormContext";
 import React from "react";
 
 const CreateQuotePage = () => {
-  const { currentStep, quote } = useQuoteFormContext();
+  const { currentStep } = useQuoteFormContext();
 
   return (
     <div className="container flex flex-col gap-6 py-12 xl:w-[80dvw] xl:max-w-5xl">

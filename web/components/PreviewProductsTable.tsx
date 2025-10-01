@@ -15,9 +15,14 @@ const PreviewProductsTable = () => {
     quote: { products, totalPrice },
   } = useQuoteFormContext();
 
-  const sousTotal = products
-    ?.reduce((acc, curVal) => acc + curVal.quantity * curVal.unitPrice, 0)
+  const sousTotal: string = products
+    ?.reduce(
+      (acc: number, curVal) => acc + curVal.quantity * Number(curVal.unitPrice),
+      0
+    )
     ?.toFixed(2);
+
+  const totalVAT = (totalPrice - Number(sousTotal)).toFixed(2);
 
   return (
     <div>
@@ -50,25 +55,25 @@ const PreviewProductsTable = () => {
           <TableRow className="font-medium hover:bg-transparent border-b-0">
             <TableCell></TableCell>
             <TableCell></TableCell>
-            <TableCell colSpan="2">Sous-total</TableCell>
+            <TableCell colSpan={2}>Sous-total</TableCell>
             <TableCell className="text-right">{sousTotal}€</TableCell>
           </TableRow>
 
           <TableRow className="font-medium hover:bg-transparent border-b-0">
             <TableCell></TableCell>
             <TableCell></TableCell>
-            <TableCell colSpan="2" className="border-b border-b-black-50">
+            <TableCell colSpan={2} className="border-b border-b-black-50">
               Total VAT
             </TableCell>
             <TableCell className="text-right border-b border-b-black-50">
-              {(totalPrice - sousTotal).toFixed(2)}€
+              {totalVAT}€
             </TableCell>
           </TableRow>
 
           <TableRow className="font-bold font-playfair text-xl hover:bg-transparent border-b-0">
             <TableCell></TableCell>
             <TableCell></TableCell>
-            <TableCell colSpan="2">Total (VAT inclus)</TableCell>
+            <TableCell colSpan={2}>Total (VAT inclus)</TableCell>
             <TableCell className="text-right">{totalPrice}€</TableCell>
           </TableRow>
         </TableBody>
